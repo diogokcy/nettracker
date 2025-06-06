@@ -47,7 +47,7 @@ public class UserConfig {
     }
 
     public int getTotalHosts() {
-        return endAddress - startAddress;
+        return (fullSubnet) ? 255 : (endAddress - startAddress);
     }
 
     public List<Host> createHostList() {
