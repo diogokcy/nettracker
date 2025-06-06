@@ -4,7 +4,6 @@ import nettracker.config.UserConfig;
 import nettracker.host.Host;
 import nettracker.scan.ScanController;
 import nettracker.scan.ScanListener;
-import nettracker.threads.*;
 import nettracker.utils.ScanTimer;
 import nettracker.gui.MainWindow;
 
@@ -26,7 +25,8 @@ public class MainWindowController implements ScanListener {
     public void startScan(int version) {
         stopHit = false;
 
-        UserConfig config = mainWindow.getNetworkConfigPanel().getUserConfig();
+        UserConfig config = mainWindow.getUserConfig();
+        config.setVersion(version);
 
         if (!validateUserConfig(config, version)) {
             mainWindow.showError("Configuração inválida!");
@@ -42,15 +42,7 @@ public class MainWindowController implements ScanListener {
 
         scanTimer.start(mainWindow::updateTimer);
 
-        ThreadManager threadManager = switch (version) {
-            case 0 -> new NoThreadManager();
-            case 1 -> new SingleThreadManager();
-            case 2 -> new MultiThreadManager(config.getThreadNumber());
-            case 3 -> new DynamicThreadManager();
-            default -> throw new IllegalArgumentException("Versão inválida");
-        };
-
-        scanController.onStartScan(threadManager, config);
+        scanController.onStartScan(config);
     }
 
     public void stopScan() {

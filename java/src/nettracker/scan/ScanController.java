@@ -3,10 +3,9 @@ package nettracker.scan;
 import nettracker.config.UserConfig;
 import nettracker.host.Host;
 import nettracker.host.HostScanner;
-import nettracker.threads.ThreadManager;
+import nettracker.threads.*;
 import nettracker.utils.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ScanController implements ScanListener, UserActionListener {
@@ -21,20 +20,23 @@ public class ScanController implements ScanListener, UserActionListener {
         this.listener = listener;
     }
 
-    public boolean isScanning() {
-        return isScanning;
-    }
-
     @Override
-    public void onStartScan(ThreadManager threadManager, UserConfig userConfig) {
+    public void onStartScan(UserConfig userConfig) {
         if (isScanning) {
             stopCurrentScan();
         }
 
-        this.threadManager = threadManager;
+        threadManager = switch (userConfig.getVersion()) {
+            case 0 -> new NoThreadManager();
+            case 1 -> new SingleThreadManager();
+            case 2 -> new MultiThreadManager(userConfig.getThreadNumber());
+            case 3 -> new DynamicThreadManager();
+            default -> throw new IllegalArgumentException("Versão inválida");
+        };
+
         this.isScanning = true;
 
-        List<Host> hosts = generateHosts(userConfig);
+        List<Host> hosts = userConfig.createHostList();
 
         this.totalTasks = hosts.size();
         this.completedTasks = 0;
@@ -59,23 +61,6 @@ public class ScanController implements ScanListener, UserActionListener {
             threadManager.shutdownNow();
             threadManager = null;
         }
-    }
-
-
-    private List<Host> generateHosts(UserConfig config) {
-        List<Host> hosts = new ArrayList<>();
-
-        int start = config.isFullSubnet() ? 0 : config.getStartAddress();
-        int end = config.isFullSubnet() ? 255 : config.getEndAddress();
-
-        String network = config.getNetworkAddress();
-
-        for (int i = start; i <= end; i++) {
-            String ip = network + "." + i;
-            hosts.add(new Host(ip));
-        }
-
-        return hosts;
     }
 
     @Override

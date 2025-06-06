@@ -11,7 +11,7 @@ public class UserConfig {
     private final int startAddress;
     private final int endAddress;
     private final int threadNumber;
-    private final boolean useCoreNumber;
+    private int version;
 
     public UserConfig(String networkBase, boolean fullSubnet, int start, int end, int threadNumber, boolean useCoreNumber) {
         this.networkAddress = networkBase;
@@ -19,7 +19,6 @@ public class UserConfig {
         this.startAddress = start;
         this.endAddress = end;
         this.threadNumber = useCoreNumber ? Utils.NUMBER_OF_CORES : threadNumber;
-        this.useCoreNumber = useCoreNumber;
     }
 
     public String getNetworkAddress() {
@@ -42,12 +41,16 @@ public class UserConfig {
         return threadNumber;
     }
 
-    public boolean isUseCoreNumber() {
-        return useCoreNumber;
-    }
-
     public int getTotalHosts() {
         return (fullSubnet) ? 255 : (endAddress - startAddress);
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public List<Host> createHostList() {

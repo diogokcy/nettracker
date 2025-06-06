@@ -1,5 +1,6 @@
 package nettracker.gui;
 
+import nettracker.config.UserConfig;
 import nettracker.gui.panels.*;
 import nettracker.gui.controller.MainWindowController;
 import nettracker.host.Host;
@@ -110,5 +111,9 @@ public class MainWindow extends JFrame {
 
     public void showError(String message) {
         SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(this, message, "Erro", JOptionPane.ERROR_MESSAGE));
+    }
+
+    public UserConfig getUserConfig() {
+        return networkConfigPanel.getUserConfig();
     }
 }
