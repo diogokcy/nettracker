@@ -13,12 +13,12 @@ public class UserConfig {
     private final int threadNumber;
     private final boolean useCoreNumber;
 
-    public UserConfig(String networkBase, boolean fullSubnet, int start, int end, boolean useCoreNumber) {
+    public UserConfig(String networkBase, boolean fullSubnet, int start, int end, int threadNumber, boolean useCoreNumber) {
         this.networkAddress = networkBase;
         this.fullSubnet = fullSubnet;
         this.startAddress = start;
         this.endAddress = end;
-        threadNumber = useCoreNumber ? Utils.NUMBER_OF_CORES : (end - start + 1);
+        this.threadNumber = useCoreNumber ? Utils.NUMBER_OF_CORES : threadNumber;
         this.useCoreNumber = useCoreNumber;
     }
 

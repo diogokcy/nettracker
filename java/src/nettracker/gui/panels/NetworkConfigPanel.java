@@ -13,6 +13,7 @@ public class NetworkConfigPanel extends JPanel {
     private JSpinner startAddress;
     private JSpinner endAddress;
     private JCheckBox useCores;
+    private JSpinner numThreads;
 
     public NetworkConfigPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -56,7 +57,7 @@ public class NetworkConfigPanel extends JPanel {
         threadPanel.add(useCores);
 
         threadPanel.add(new JLabel("ou Nº threads:"));
-        JSpinner numThreads = new JSpinner(new SpinnerNumberModel(128, 0, 128, 1));
+        numThreads = new JSpinner(new SpinnerNumberModel(128, 0, 128, 1));
         threadPanel.add(numThreads);
 
         return threadPanel;
@@ -67,7 +68,8 @@ public class NetworkConfigPanel extends JPanel {
         boolean fullSubnet = scanFullSubnet.isSelected();
         int start = (Integer) startAddress.getValue();
         int end = (Integer) endAddress.getValue();
+        int threads = (Integer) numThreads.getValue();
         boolean cores = useCores.isSelected();
-        return new UserConfig(network, fullSubnet, start, end, cores);
+        return new UserConfig(network, fullSubnet, start, end, threads, cores);
     }
 }
