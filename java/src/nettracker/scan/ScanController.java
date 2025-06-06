@@ -4,6 +4,7 @@ import nettracker.config.UserConfig;
 import nettracker.host.Host;
 import nettracker.host.HostScanner;
 import nettracker.threads.ThreadManager;
+import nettracker.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class ScanController implements ScanListener, UserActionListener {
         this.completedTasks = 0;
 
         for (Host host : hosts) {
-            HostScanner hostScanner = new HostScanner(host, 1000,this);
+            HostScanner hostScanner = new HostScanner(host, Utils.TIMEOUT,this);
             threadManager.submitTask(hostScanner);
         }
 
